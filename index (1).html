@@ -1,0 +1,2648 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Цифровой мастер — сайты, приложения и ИИ-агенты</title>
+<meta name="description" content="Создаю сайты, веб-приложения и ИИ-агентов для экспертов и бизнеса. 30+ проектов, фиксированный бюджет, запуск за 3–6 недель.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root {
+  --ink:     #0D0D0F;
+  --surface: #13131A;
+  --edge:    #1E1E2E;
+  --accent:  #7C6AF7;
+  --glow:    #A594FF;
+  --text:    #F0EEFF;
+  --muted:   #8B85A8;
+  --hint:    #3D3860;
+  --success: #34D399;
+  --danger:  #F87171;
+
+  --ff-display: 'Syne', sans-serif;
+  --ff-body:    'Inter', sans-serif;
+  --ff-mono:    'JetBrains Mono', monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--ff-body);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; background: none; font: inherit; }
+ul { list-style: none; }
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--glow));
+  z-index: 1000;
+  transition: width 0.1s linear;
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+#cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s var(--ease-out), width 0.3s var(--ease-out), height 0.3s var(--ease-out), background 0.3s;
+  mix-blend-mode: screen;
+}
+#cursor.big {
+  width: 44px; height: 44px;
+  background: rgba(124,106,247,0.25);
+  border: 1px solid var(--accent);
+}
+@media (pointer: coarse) { #cursor { display: none; } }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+section {
+  padding: 120px 0;
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  #cursor { display: none; }
+}
+
+/* ============================================================
+   EYEBROW / LABELS
+   ============================================================ */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.eyebrow::before {
+  content: '';
+  display: block;
+  width: 24px; height: 1px;
+  background: var(--accent);
+}
+
+.section-title {
+  font-family: var(--ff-display);
+  font-size: clamp(36px, 5vw, 54px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 540px;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.25s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.5s var(--ease-out);
+}
+.btn-primary:hover::after { transform: translateX(100%); }
+.btn-primary:hover {
+  background: var(--glow);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(124,106,247,0.4);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--edge);
+}
+.btn-ghost:hover {
+  color: var(--text);
+  border-color: var(--hint);
+  background: rgba(255,255,255,0.03);
+  transform: translateY(-1px);
+}
+
+.btn svg { width: 16px; height: 16px; flex-shrink: 0; transition: transform 0.25s var(--ease-out); }
+.btn:hover svg { transform: translateX(3px); }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 0;
+  transition: padding 0.4s var(--ease-out), background 0.4s, backdrop-filter 0.4s;
+}
+nav.scrolled {
+  padding: 14px 0;
+  background: rgba(13,13,15,0.85);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--edge);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  font-family: var(--ff-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.nav-logo span { color: var(--accent); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+.nav-links a {
+  font-size: 14px;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-cta { margin-left: 8px; }
+
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+}
+.burger span {
+  display: block;
+  width: 22px; height: 1.5px;
+  background: var(--text);
+  transition: all 0.3s;
+}
+.burger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--ink);
+  z-index: 99;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s;
+}
+.mobile-menu.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.mobile-menu a {
+  font-family: var(--ff-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(--text); }
+
+@media (max-width: 768px) {
+  .nav-links, .nav-cta { display: none; }
+  .burger { display: flex; }
+  .mobile-menu { display: flex; }
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 140px 0 100px;
+}
+
+/* Gradient mesh background */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.55;
+  animation: blobFloat 12s ease-in-out infinite;
+  will-change: transform;
+}
+.blob-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, #4C3BCF 0%, transparent 70%);
+  top: -200px; right: -100px;
+  animation-duration: 14s;
+}
+.blob-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #7C3AED 0%, transparent 70%);
+  bottom: -100px; right: 20%;
+  animation-duration: 18s;
+  animation-delay: -5s;
+}
+.blob-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, #2563EB 0%, transparent 70%);
+  top: 40%; left: -100px;
+  animation-duration: 22s;
+  animation-delay: -10s;
+}
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.97); }
+}
+
+/* Noise grain overlay */
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--glow);
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.8s var(--ease-out) 0.2s forwards;
+}
+.hero-eyebrow .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.hero-title {
+  font-family: var(--ff-display);
+  font-size: clamp(52px, 7.5vw, 90px);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  margin-bottom: 28px;
+}
+
+/* Word-by-word reveal */
+.hero-title .word {
+  display: inline-block;
+  overflow: hidden;
+}
+.hero-title .word-inner {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100%);
+  animation: wordReveal 0.7s var(--ease-out) forwards;
+}
+.hero-title .word:nth-child(1) .word-inner { animation-delay: 0.45s; }
+.hero-title .word:nth-child(2) .word-inner { animation-delay: 0.55s; }
+.hero-title .word:nth-child(3) .word-inner { animation-delay: 0.65s; }
+.hero-title .word:nth-child(4) .word-inner { animation-delay: 0.75s; }
+.hero-title .word:nth-child(5) .word-inner { animation-delay: 0.85s; }
+.hero-title .word:nth-child(6) .word-inner { animation-delay: 0.95s; }
+.hero-title .word:nth-child(7) .word-inner { animation-delay: 1.05s; }
+.hero-title .word:nth-child(8) .word-inner { animation-delay: 1.15s; }
+
+@keyframes wordReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-title .accent-text {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--glow) 50%, #C4B5FD 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 5s ease infinite;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.hero-sub {
+  font-size: clamp(17px, 2vw, 20px);
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.65;
+  margin-bottom: 44px;
+  opacity: 0;
+  animation: fadeUp 0.7s var(--ease-out) 1.25s forwards;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.7s var(--ease-out) 1.45s forwards;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 0.7s var(--ease-out) 1.8s forwards;
+}
+.hero-scroll span {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--hint);
+  text-transform: uppercase;
+}
+.scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { transform: scaleY(1); opacity: 1; }
+  50% { transform: scaleY(0.6); opacity: 0.4; }
+}
+
+/* ============================================================
+   PROOF / STATS
+   ============================================================ */
+#proof {
+  padding: 64px 0;
+  border-top: 1px solid var(--edge);
+  border-bottom: 1px solid var(--edge);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.stat-item {
+  background: var(--surface);
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-number {
+  font-family: var(--ff-display);
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  line-height: 1;
+}
+.stat-number .accent-num { color: var(--accent); }
+
+.stat-label {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.logos-strip {
+  margin-top: 56px;
+  text-align: center;
+}
+.logos-label {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hint);
+  margin-bottom: 28px;
+}
+.logos-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.logo-placeholder {
+  font-family: var(--ff-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--hint);
+  letter-spacing: -0.02em;
+  filter: grayscale(1);
+  opacity: 0.45;
+  transition: opacity 0.3s, filter 0.3s;
+}
+.logo-placeholder:hover { opacity: 0.7; filter: grayscale(0); color: var(--muted); }
+
+@media (max-width: 768px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ============================================================
+   SERVICES
+   ============================================================ */
+.services-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: end;
+  margin-bottom: 60px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.service-card {
+  background: var(--surface);
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: background 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(124,106,247,0.08) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.service-card:hover { background: #16162A; transform: translateY(-4px); }
+.service-card:hover::before { opacity: 1; }
+
+.service-icon {
+  width: 52px; height: 52px;
+  border-radius: var(--radius-sm);
+  background: rgba(124,106,247,0.1);
+  border: 1px solid rgba(124,106,247,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, border-color 0.3s, transform 0.4s var(--ease-spring);
+}
+.service-card:hover .service-icon {
+  background: rgba(124,106,247,0.2);
+  border-color: var(--accent);
+  transform: scale(1.1) rotate(-5deg);
+}
+.service-icon svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.service-title {
+  font-family: var(--ff-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.service-desc {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.65;
+  flex: 1;
+}
+
+.service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--accent);
+  background: rgba(124,106,247,0.08);
+  border: 1px solid rgba(124,106,247,0.15);
+  border-radius: 4px;
+  padding: 3px 8px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.service-card:hover .tag { background: rgba(124,106,247,0.15); border-color: rgba(124,106,247,0.35); }
+
+@media (max-width: 900px) {
+  .services-header { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: 1fr; }
+  .service-card:hover { transform: none; }
+}
+
+/* ============================================================
+   WORK / CASES
+   ============================================================ */
+.work-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 52px;
+  gap: 24px;
+}
+
+.cases-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.case-card {
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color 0.35s, transform 0.35s var(--ease-out), box-shadow 0.35s;
+  cursor: pointer;
+}
+.case-card:hover {
+  border-color: var(--hint);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,106,247,0.15);
+}
+
+.case-preview {
+  aspect-ratio: 16/9;
+  background: var(--edge);
+  position: relative;
+  overflow: hidden;
+}
+.case-preview-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-display);
+  font-size: 14px;
+  color: var(--hint);
+  letter-spacing: 0.05em;
+  transition: transform 0.5s var(--ease-out);
+}
+.case-card:hover .case-preview-inner { transform: scale(1.04); }
+
+/* Decorative preview patterns */
+.preview-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+}
+.preview-1 { background: linear-gradient(135deg, #1a1a3e 0%, #0d1117 50%, #1a1a2e 100%); }
+.preview-1::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 60%, rgba(124,106,247,0.4) 0%, transparent 60%);
+}
+.preview-2 { background: linear-gradient(135deg, #0d1a1a 0%, #0d1117 50%, #0d1a2e 100%); }
+.preview-2::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 40%, rgba(16,185,129,0.35) 0%, transparent 60%);
+}
+.preview-3 { background: linear-gradient(135deg, #1a0d1a 0%, #0d1117 50%, #2a0d1a 100%); }
+.preview-3::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(168,85,247,0.4) 0%, transparent 60%);
+}
+.preview-4 { background: linear-gradient(135deg, #1a1a0d 0%, #0d1117 50%, #1a1a0d 100%); }
+.preview-4::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 60% 30%, rgba(245,158,11,0.35) 0%, transparent 60%);
+}
+
+.preview-grid-lines {
+  position: absolute;
+  inset: 20px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+}
+.preview-grid-lines::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 12px; right: 12px;
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+}
+.preview-grid-lines::after {
+  content: '';
+  position: absolute;
+  top: 12px; left: 12px;
+  width: 40%;
+  height: 6px;
+  background: rgba(124,106,247,0.3);
+  border-radius: 2px;
+}
+
+.case-body {
+  padding: 28px 28px 24px;
+}
+.case-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.case-type {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--accent);
+  background: rgba(124,106,247,0.1);
+  border: 1px solid rgba(124,106,247,0.2);
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+.case-year {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--hint);
+}
+.case-name {
+  font-family: var(--ff-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.case-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+.case-result {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: var(--success);
+}
+.case-result::before {
+  content: '↑';
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .cases-grid { grid-template-columns: 1fr; }
+  .work-header { flex-direction: column; align-items: flex-start; }
+}
+
+/* ============================================================
+   PROCESS
+   ============================================================ */
+#process {
+  background: var(--surface);
+  border-top: 1px solid var(--edge);
+  border-bottom: 1px solid var(--edge);
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: 56px;
+}
+
+.process-step {
+  background: var(--surface);
+  padding: 36px 28px;
+  position: relative;
+  transition: background 0.3s;
+}
+.process-step:hover { background: #16162A; }
+
+.step-num {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--hint);
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+
+.step-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-sm);
+  background: rgba(124,106,247,0.08);
+  border: 1px solid rgba(124,106,247,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  transition: all 0.35s var(--ease-spring);
+}
+.process-step:hover .step-icon-wrap {
+  background: rgba(124,106,247,0.15);
+  border-color: var(--accent);
+  transform: rotate(-8deg) scale(1.08);
+}
+.step-icon-wrap svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.step-title {
+  font-family: var(--ff-display);
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+
+.step-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.step-time {
+  margin-top: 20px;
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--accent);
+}
+
+@media (max-width: 900px) {
+  .process-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .process-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   ABOUT
+   ============================================================ */
+.about-layout {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.about-photo-wrap {
+  position: relative;
+}
+.about-photo {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--hint);
+}
+.photo-placeholder svg { width: 48px; height: 48px; stroke: var(--hint); fill: none; stroke-width: 1; stroke-linecap: round; }
+.photo-placeholder span { font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; }
+
+/* Floating badge */
+.photo-badge {
+  position: absolute;
+  bottom: 24px;
+  right: -20px;
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.badge-num {
+  font-family: var(--ff-display);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+.badge-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.about-text .section-title { margin-bottom: 24px; }
+
+.about-bio {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.75;
+  margin-bottom: 40px;
+}
+.about-bio p + p { margin-top: 16px; }
+.about-bio strong { color: var(--text); font-weight: 500; }
+
+.about-stack-title {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hint);
+  margin-bottom: 14px;
+}
+.about-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.about-facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.fact {
+  background: var(--surface);
+  padding: 20px;
+  text-align: center;
+}
+.fact-val {
+  font-family: var(--ff-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.03em;
+}
+.fact-key {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .about-layout { grid-template-columns: 1fr; }
+  .about-photo-wrap { max-width: 340px; }
+  .photo-badge { right: 0; }
+}
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+#testimonials { background: var(--surface); border-top: 1px solid var(--edge); border-bottom: 1px solid var(--edge); }
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 52px;
+}
+
+.testi-card {
+  background: var(--ink);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: border-color 0.3s, transform 0.35s var(--ease-out), box-shadow 0.35s;
+}
+.testi-card:hover {
+  border-color: var(--hint);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+}
+
+.testi-stars {
+  display: flex;
+  gap: 3px;
+}
+.star {
+  width: 14px; height: 14px;
+  fill: var(--accent);
+}
+
+.testi-quote {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--muted);
+  flex: 1;
+  position: relative;
+}
+.testi-quote::before {
+  content: '"';
+  position: absolute;
+  top: -8px; left: -4px;
+  font-family: var(--ff-display);
+  font-size: 64px;
+  color: rgba(124,106,247,0.12);
+  line-height: 1;
+}
+
+.testi-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-top: 1px solid var(--edge);
+  padding-top: 20px;
+}
+.testi-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--edge);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+  border: 1px solid rgba(124,106,247,0.2);
+}
+.testi-name {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text);
+}
+.testi-role {
+  font-size: 12px;
+  color: var(--hint);
+  margin-top: 2px;
+}
+.testi-project {
+  margin-left: auto;
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  color: var(--accent);
+  background: rgba(124,106,247,0.08);
+  border: 1px solid rgba(124,106,247,0.15);
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .testi-card:hover { transform: none; }
+}
+
+/* ============================================================
+   AI DEMO
+   ============================================================ */
+#ai-demo {
+  background: linear-gradient(180deg, var(--ink) 0%, #0D0820 100%);
+}
+
+.demo-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.demo-chat {
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.chat-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--edge);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.chat-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--glow));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.chat-name { font-size: 14px; font-weight: 500; }
+.chat-status { font-size: 12px; color: var(--success); display: flex; align-items: center; gap: 4px; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
+
+.chat-messages {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 260px;
+}
+.msg {
+  display: flex;
+  gap: 10px;
+  max-width: 85%;
+}
+.msg-bot { align-self: flex-start; }
+.msg-user { align-self: flex-end; flex-direction: row-reverse; }
+
+.msg-bubble {
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.msg-bot .msg-bubble {
+  background: var(--edge);
+  color: var(--text);
+  border-bottom-left-radius: 4px;
+}
+.msg-user .msg-bubble {
+  background: var(--accent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.typing-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+  background: var(--edge);
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  width: fit-content;
+}
+.typing-dots span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--muted);
+  animation: typingBounce 1.2s ease-in-out infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+}
+.typing-dots.hidden { display: none; }
+
+.chat-quick {
+  padding: 16px 20px;
+  border-top: 1px solid var(--edge);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.quick-btn {
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: var(--accent);
+  background: rgba(124,106,247,0.08);
+  border: 1px solid rgba(124,106,247,0.2);
+  border-radius: 20px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.quick-btn:hover { background: rgba(124,106,247,0.18); border-color: var(--accent); }
+
+.chat-input-row {
+  padding: 16px 20px;
+  border-top: 1px solid var(--edge);
+  display: flex;
+  gap: 10px;
+}
+.chat-input {
+  flex: 1;
+  background: var(--edge);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--text);
+  font-family: var(--ff-body);
+  transition: border-color 0.2s;
+  outline: none;
+}
+.chat-input::placeholder { color: var(--hint); }
+.chat-input:focus { border-color: var(--accent); }
+.chat-send {
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  border: none;
+  font-family: var(--ff-body);
+}
+.chat-send:hover { background: var(--glow); transform: scale(1.04); }
+
+.demo-info .section-title { margin-bottom: 20px; }
+.demo-info .section-sub { margin-bottom: 32px; }
+
+.demo-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+.demo-feat {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.feat-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: rgba(124,106,247,0.08);
+  border: 1px solid rgba(124,106,247,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.feat-icon svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.feat-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.feat-text strong { color: var(--text); font-weight: 500; }
+
+@media (max-width: 900px) {
+  .demo-layout { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+#contact {
+  background: linear-gradient(180deg, #0D0820 0%, var(--ink) 100%);
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.contact-info .section-title { margin-bottom: 20px; }
+
+.contact-channels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 36px;
+}
+.channel {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.25s, transform 0.25s var(--ease-out);
+  cursor: pointer;
+}
+.channel:hover { border-color: var(--hint); transform: translateX(4px); }
+.channel-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(124,106,247,0.08); border: 1px solid rgba(124,106,247,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.channel-icon svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; }
+.channel-label { font-size: 12px; color: var(--hint); }
+.channel-value { font-size: 14px; font-weight: 500; color: var(--text); }
+
+.contact-form {
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-lg);
+  padding: 40px 36px;
+}
+.form-title {
+  font-family: var(--ff-display);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  letter-spacing: -0.02em;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.field-group:last-of-type { margin-bottom: 28px; }
+.field-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.field-input {
+  background: var(--ink);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 15px;
+  color: var(--text);
+  font-family: var(--ff-body);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  width: 100%;
+}
+.field-input::placeholder { color: var(--hint); }
+.field-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124,106,247,0.12);
+}
+.field-input.error { border-color: var(--danger); }
+.field-input.valid { border-color: var(--success); }
+
+textarea.field-input {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.form-note {
+  font-size: 12px;
+  color: var(--hint);
+  text-align: center;
+  margin-top: 14px;
+}
+
+
+
+
+@media (max-width: 900px) {
+  .contact-layout { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  border-top: 1px solid var(--edge);
+  padding: 40px 0;
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.footer-logo {
+  font-family: var(--ff-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.footer-logo span { color: var(--accent); }
+.footer-copy {
+  font-size: 13px;
+  color: var(--hint);
+}
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+.footer-links a {
+  font-size: 13px;
+  color: var(--hint);
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--text); }
+
+/* ============================================================
+   SECTION DIVIDERS
+   ============================================================ */
+.section-line {
+  width: 40px; height: 1px;
+  background: var(--accent);
+  margin-bottom: 24px;
+  opacity: 0.6;
+}
+
+/* ============================================================
+   BACK TO TOP BUTTON
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(16px) scale(0.85);
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out),
+              background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+#back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+#back-to-top:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 8px 28px rgba(124,106,247,0.45);
+  transform: translateY(-3px) scale(1.08);
+}
+#back-to-top:active {
+  transform: translateY(0) scale(0.96);
+}
+#back-to-top svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.2s var(--ease-spring);
+}
+#back-to-top:hover svg {
+  transform: translateY(-2px);
+}
+@media (max-width: 768px) {
+  #back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* ============================================================
+   ENHANCED FORM SUCCESS ANIMATION
+   ============================================================ */
+.form-success {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 48px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.form-success.show {
+  display: flex;
+  animation: successFadeIn 0.5s var(--ease-out) forwards;
+}
+@keyframes successFadeIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* Ripple ring */
+.success-ring {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  margin-bottom: 24px;
+}
+.success-ring::before,
+.success-ring::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--success);
+  animation: ringPulse 2s var(--ease-out) infinite;
+}
+.success-ring::after { animation-delay: 0.5s; }
+@keyframes ringPulse {
+  0%   { transform: scale(0.85); opacity: 0.8; }
+  100% { transform: scale(1.5);  opacity: 0; }
+}
+
+.success-circle {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: rgba(52,211,153,0.12);
+  border: 1.5px solid rgba(52,211,153,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animated checkmark */
+.check-svg {
+  width: 32px;
+  height: 32px;
+  overflow: visible;
+}
+.check-path {
+  stroke: var(--success);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+}
+.form-success.show .check-path {
+  animation: drawCheck 0.55s var(--ease-out) 0.2s forwards;
+}
+@keyframes drawCheck {
+  to { stroke-dashoffset: 0; }
+}
+
+.success-title {
+  font-family: var(--ff-display);
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  opacity: 0;
+}
+.form-success.show .success-title {
+  animation: successFadeIn 0.4s var(--ease-out) 0.45s forwards;
+}
+
+.success-body {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 24px;
+  opacity: 0;
+}
+.form-success.show .success-body {
+  animation: successFadeIn 0.4s var(--ease-out) 0.6s forwards;
+}
+
+.success-cta {
+  opacity: 0;
+}
+.form-success.show .success-cta {
+  animation: successFadeIn 0.4s var(--ease-out) 0.75s forwards;
+}
+
+/* Confetti particles */
+.confetti-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.confetti-wrap span {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  top: -10px;
+  opacity: 0;
+}
+.form-success.show .confetti-wrap span {
+  animation: confettiFall var(--dur, 1.2s) var(--ease-out) var(--delay, 0s) forwards;
+}
+@keyframes confettiFall {
+  0%   { opacity: 1; transform: translateY(0)   rotate(0deg); }
+  100% { opacity: 0; transform: translateY(260px) rotate(var(--spin, 360deg)); }
+}
+
+/* ============================================================
+   IMPROVED COUNT-UP (eased)
+   ============================================================ */
+/* JS handles this — no extra CSS needed */
+
+/* ============================================================
+   MOBILE MENU IMPROVEMENTS
+   ============================================================ */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13,13,15,0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 99;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease-out);
+}
+.mobile-menu.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.mobile-menu a {
+  font-family: var(--ff-display);
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s;
+  transform: translateY(20px);
+  opacity: 0;
+}
+.mobile-menu.open a {
+  transform: translateY(0);
+  opacity: 1;
+}
+.mobile-menu.open a:nth-child(1) { transition: color 0.2s, background 0.2s, transform 0.4s var(--ease-out) 0.05s, opacity 0.4s var(--ease-out) 0.05s; }
+.mobile-menu.open a:nth-child(2) { transition: color 0.2s, background 0.2s, transform 0.4s var(--ease-out) 0.12s, opacity 0.4s var(--ease-out) 0.12s; }
+.mobile-menu.open a:nth-child(3) { transition: color 0.2s, background 0.2s, transform 0.4s var(--ease-out) 0.19s, opacity 0.4s var(--ease-out) 0.19s; }
+.mobile-menu.open a:nth-child(4) { transition: color 0.2s, background 0.2s, transform 0.4s var(--ease-out) 0.26s, opacity 0.4s var(--ease-out) 0.26s; }
+.mobile-menu.open a:nth-child(5) { transition: color 0.2s, background 0.2s, transform 0.4s var(--ease-out) 0.33s, opacity 0.4s var(--ease-out) 0.33s; }
+.mobile-menu a:hover { color: var(--text); background: rgba(124,106,247,0.08); }
+.mobile-menu a:active { background: rgba(124,106,247,0.14); }
+
+.mobile-divider {
+  width: 48px;
+  height: 1px;
+  background: var(--edge);
+  margin: 8px 0;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out) 0.3s;
+}
+.mobile-menu.open .mobile-divider { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progress-bar" role="progressbar" aria-hidden="true"></div>
+
+<!-- Custom cursor -->
+<div id="cursor" aria-hidden="true"></div>
+
+<!-- Back to top -->
+<button id="back-to-top" aria-label="Прокрутить наверх" title="Наверх">
+  <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Навигация">
+  <a href="#services">Услуги</a>
+  <a href="#work">Работы</a>
+  <a href="#process">Процесс</a>
+  <a href="#about">Обо мне</a>
+  <div class="mobile-divider"></div>
+  <a href="#contact" class="btn btn-primary" style="font-size:18px;margin-top:8px">Обсудить проект</a>
+</div>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav id="nav" aria-label="Основная навигация">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo">ЦМ<span>.</span></a>
+    <ul class="nav-links" role="list">
+      <li><a href="#services">Услуги</a></li>
+      <li><a href="#work">Работы</a></li>
+      <li><a href="#process">Процесс</a></li>
+      <li><a href="#about">Обо мне</a></li>
+    </ul>
+    <a href="#contact" class="btn btn-primary nav-cta">
+      Обсудить проект
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section id="hero" aria-label="Главная">
+  <div class="hero-bg" id="hero-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="dot"></span>
+        Цифровой мастер · Доступен для проектов
+      </div>
+      <h1 class="hero-title">
+        <span class="word"><span class="word-inner">Превращаю</span></span>&#32;<span class="word"><span class="word-inner">идеи</span></span>&#32;<span class="word"><span class="word-inner">в</span></span>&#32;<span class="word"><span class="word-inner"><span class="accent-text">цифровые</span></span></span>&#32;<span class="word"><span class="word-inner">продукты,</span></span>&#32;<span class="word"><span class="word-inner">которые</span></span>&#32;<span class="word"><span class="word-inner">работают</span></span>
+      </h1>
+      <p class="hero-sub">
+        Создаю сайты, веб-приложения и ИИ-агентов для экспертов и бизнеса.
+        Фиксированный бюджет, понятные сроки — от бриф-созвона до запуска за 3–6 недель.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">
+          Обсудить проект
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#work" class="btn btn-ghost">Посмотреть работы</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">
+    <span>Листать</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROOF
+     ============================================================ -->
+<section id="proof" aria-label="Достижения">
+  <div class="container">
+    <div class="stats-grid reveal">
+      <div class="stat-item">
+        <div class="stat-number"><span class="count-up" data-target="30">0</span><span class="accent-num">+</span></div>
+        <div class="stat-label">проектов запущено</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number"><span class="count-up" data-target="3">0</span></div>
+        <div class="stat-label">года опыта в разработке</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number"><span class="count-up" data-target="15">0</span><span class="accent-num">+</span></div>
+        <div class="stat-label">клиентов рекомендуют</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number"><span class="count-up" data-target="100">0</span><span class="accent-num">%</span></div>
+        <div class="stat-label">фиксированный бюджет</div>
+      </div>
+    </div>
+    <div class="logos-strip reveal reveal-delay-2">
+      <p class="logos-label">Работал с</p>
+      <div class="logos-row">
+        <span class="logo-placeholder">Кофейня №1</span>
+        <span class="logo-placeholder">MedClinic</span>
+        <span class="logo-placeholder">StartupX</span>
+        <span class="logo-placeholder">Agency Pro</span>
+        <span class="logo-placeholder">EduOnline</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SERVICES
+     ============================================================ -->
+<section id="services" aria-label="Услуги">
+  <div class="container">
+    <div class="services-header">
+      <div class="reveal">
+        <span class="eyebrow">Услуги</span>
+        <h2 class="section-title">Что я создаю</h2>
+      </div>
+      <p class="section-sub reveal reveal-delay-1">
+        Три направления — одна цель: чтобы ваш бизнес получил инструмент, который реально работает, а не просто красиво выглядит.
+      </p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div>
+          <h3 class="service-title">Сайты и лендинги</h3>
+          <p class="service-desc">Корпоративные сайты, лендинги и интернет-магазины. Быстрые, красивые, заточенные под конверсию — не просто цифровая визитка.</p>
+        </div>
+        <div class="service-tags">
+          <span class="tag">Next.js</span>
+          <span class="tag">Webflow</span>
+          <span class="tag">React</span>
+          <span class="tag">Tilda</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div>
+          <h3 class="service-title">Веб-приложения</h3>
+          <p class="service-desc">CRM, личные кабинеты, SaaS-продукты. Полный цикл: от проектирования до деплоя и поддержки после запуска.</p>
+        </div>
+        <div class="service-tags">
+          <span class="tag">React</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">Supabase</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4"/><path d="M6 22v-2a6 6 0 0 1 6-6 6 6 0 0 1 6 6v2"/><path d="M22 11h-4M20 9l2 2-2 2"/></svg>
+        </div>
+        <div>
+          <h3 class="service-title">ИИ-агенты</h3>
+          <p class="service-desc">Чат-боты, автоответчики, обработчики заявок и ИИ-ассистенты для бизнеса. Экономят часы рутины каждый день.</p>
+        </div>
+        <div class="service-tags">
+          <span class="tag">Claude API</span>
+          <span class="tag">OpenAI</span>
+          <span class="tag">n8n</span>
+          <span class="tag">Telegram</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     WORK
+     ============================================================ -->
+<section id="work" aria-label="Избранные проекты">
+  <div class="container">
+    <div class="work-header">
+      <div class="reveal">
+        <span class="eyebrow">Работы</span>
+        <h2 class="section-title">Избранные проекты</h2>
+      </div>
+      <a href="#contact" class="btn btn-ghost reveal reveal-delay-1">Все работы</a>
+    </div>
+    <div class="cases-grid">
+      <div class="case-card reveal">
+        <div class="case-preview">
+          <div class="preview-pattern preview-1"></div>
+          <div class="case-preview-inner">
+            <div class="preview-grid-lines"></div>
+          </div>
+        </div>
+        <div class="case-body">
+          <div class="case-meta">
+            <span class="case-type">Сайт</span>
+            <span class="case-year">2025</span>
+          </div>
+          <div class="case-name">Сеть кофеен «Аромат»</div>
+          <p class="case-desc">Разработал продающий сайт с онлайн-бронированием столиков и интеграцией с CRM для сети из 4 заведений.</p>
+          <span class="case-result">60 онлайн-заявок в первый месяц</span>
+        </div>
+      </div>
+      <div class="case-card reveal reveal-delay-1">
+        <div class="case-preview">
+          <div class="preview-pattern preview-2"></div>
+          <div class="case-preview-inner">
+            <div class="preview-grid-lines"></div>
+          </div>
+        </div>
+        <div class="case-body">
+          <div class="case-meta">
+            <span class="case-type">ИИ-агент</span>
+            <span class="case-year">2025</span>
+          </div>
+          <div class="case-name">Telegram-бот для клиники</div>
+          <p class="case-desc">ИИ-ассистент для записи на приём, ответов на типовые вопросы и напоминаний о визитах.</p>
+          <span class="case-result">80% запросов без участия администратора</span>
+        </div>
+      </div>
+      <div class="case-card reveal reveal-delay-2">
+        <div class="case-preview">
+          <div class="preview-pattern preview-3"></div>
+          <div class="case-preview-inner">
+            <div class="preview-grid-lines"></div>
+          </div>
+        </div>
+        <div class="case-body">
+          <div class="case-meta">
+            <span class="case-type">Приложение</span>
+            <span class="case-year">2024</span>
+          </div>
+          <div class="case-name">Личный кабинет StudyPro</div>
+          <p class="case-desc">Образовательная платформа с трекингом прогресса, тестами и личным кабинетом ученика и преподавателя.</p>
+          <span class="case-result">400 активных пользователей за 3 месяца</span>
+        </div>
+      </div>
+      <div class="case-card reveal reveal-delay-3">
+        <div class="case-preview">
+          <div class="preview-pattern preview-4"></div>
+          <div class="case-preview-inner">
+            <div class="preview-grid-lines"></div>
+          </div>
+        </div>
+        <div class="case-body">
+          <div class="case-meta">
+            <span class="case-type">Лендинг</span>
+            <span class="case-year">2024</span>
+          </div>
+          <div class="case-name">Лендинг для онлайн-курса</div>
+          <p class="case-desc">Переработал лендинг эксперта по финансам с нуля. A/B-тест двух вариантов заголовка.</p>
+          <span class="case-result">Конверсия 1.2% → 4.8%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROCESS
+     ============================================================ -->
+<section id="process" aria-label="Процесс работы">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow">Процесс</span>
+      <h2 class="section-title">Как мы работаем</h2>
+      <p class="section-sub">Никаких сюрпризов. Вы знаете что происходит на каждом шаге.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-step reveal reveal-delay-1">
+        <div class="step-num">01</div>
+        <div class="step-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="step-title">Созвон-бриф</div>
+        <p class="step-desc">30–60 минут: рассказываете о задаче, я задаю вопросы. Фиксируем требования и ожидания письменно.</p>
+        <div class="step-time">День 1</div>
+      </div>
+      <div class="process-step reveal reveal-delay-2">
+        <div class="step-num">02</div>
+        <div class="step-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div class="step-title">Смета и план</div>
+        <p class="step-desc">Детальное предложение: что делаю, за сколько, в какой срок. Фиксированный бюджет до старта — без сюрпризов.</p>
+        <div class="step-time">1–2 дня</div>
+      </div>
+      <div class="process-step reveal reveal-delay-3">
+        <div class="step-num">03</div>
+        <div class="step-icon-wrap">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div class="step-title">Разработка</div>
+        <p class="step-desc">Еженедельные апдейты и доступ к рабочей версии. Правки по ходу, не в самом конце.</p>
+        <div class="step-time">2–5 недель</div>
+      </div>
+      <div class="process-step reveal reveal-delay-4">
+        <div class="step-num">04</div>
+        <div class="step-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+        </div>
+        <div class="step-title">Запуск</div>
+        <p class="step-desc">Деплой, аналитика, обучение. Месяц поддержки после запуска включён в стоимость.</p>
+        <div class="step-time">День N</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ABOUT
+     ============================================================ -->
+<section id="about" aria-label="О себе">
+  <div class="container">
+    <div class="about-layout">
+      <div class="about-photo-wrap reveal">
+        <div class="about-photo">
+          <div class="photo-placeholder">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Ваше фото</span>
+          </div>
+        </div>
+        <div class="photo-badge">
+          <div class="badge-num">3+</div>
+          <div class="badge-label">года в профессии</div>
+        </div>
+      </div>
+      <div class="about-text">
+        <div class="reveal">
+          <span class="eyebrow">Обо мне</span>
+          <h2 class="section-title">Привет, я<br>Цифровой мастер</h2>
+        </div>
+        <div class="about-bio reveal reveal-delay-1">
+          <p>Я строю сайты, приложения и ИИ-инструменты для людей, которым важно чтобы <strong>технологии работали на бизнес</strong>, а не наоборот.</p>
+          <p>Последние 3 года помогаю экспертам и небольшим командам запускать цифровые продукты без бесконечных согласований. <strong>Один человек — один голос — один результат.</strong></p>
+          <p>Я не просто «делаю сайты». Я думаю о том, как ваш продукт будет привлекать клиентов и расти после запуска.</p>
+        </div>
+        <div class="reveal reveal-delay-2">
+          <div class="about-stack-title">Технологии</div>
+          <div class="about-stack">
+            <span class="tag">Next.js</span><span class="tag">React</span><span class="tag">Node.js</span>
+            <span class="tag">TypeScript</span><span class="tag">PostgreSQL</span><span class="tag">Tailwind</span>
+            <span class="tag">Claude API</span><span class="tag">OpenAI</span><span class="tag">n8n</span>
+            <span class="tag">Vercel</span><span class="tag">Supabase</span><span class="tag">Figma</span>
+          </div>
+        </div>
+        <div class="about-facts reveal reveal-delay-3">
+          <div class="fact">
+            <div class="fact-val">30+</div>
+            <div class="fact-key">проектов сдано</div>
+          </div>
+          <div class="fact">
+            <div class="fact-val">3–6</div>
+            <div class="fact-key">недель до запуска</div>
+          </div>
+          <div class="fact">
+            <div class="fact-val">&lt;2ч</div>
+            <div class="fact-key">время ответа</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS
+     ============================================================ -->
+<section id="testimonials" aria-label="Отзывы клиентов">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow">Отзывы</span>
+      <h2 class="section-title">Что говорят клиенты</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars">
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+        </div>
+        <p class="testi-quote">Сделали сайт за 3 недели — ровно как обещал. Уже в первый месяц пошли заявки из поиска. До этого у нас вообще не было нормального онлайн-присутствия.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">АК</div>
+          <div>
+            <div class="testi-name">Анна К.</div>
+            <div class="testi-role">Владелица сети кофеен</div>
+          </div>
+          <span class="testi-project">Сайт</span>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars">
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+        </div>
+        <p class="testi-quote">Бот, который сам отвечает на вопросы клиентов в Telegram — думала, займёт полгода. Запустили за 2 недели. Сейчас 80% входящих обрабатывается без моего участия.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">МВ</div>
+          <div>
+            <div class="testi-name">Мария В.</div>
+            <div class="testi-role">Главврач частной клиники</div>
+          </div>
+          <span class="testi-project">ИИ-агент</span>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-3">
+        <div class="testi-stars">
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+          <svg class="star" viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
+        </div>
+        <p class="testi-quote">Переделали наш лендинг — конверсия выросла с 1.2% до 4.8%. Впервые работал с разработчиком, который реально понимает не только код, но и бизнес-задачу.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">ДС</div>
+          <div>
+            <div class="testi-name">Дмитрий С.</div>
+            <div class="testi-role">Основатель онлайн-школы</div>
+          </div>
+          <span class="testi-project">Лендинг</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     AI DEMO
+     ============================================================ -->
+<section id="ai-demo" aria-label="ИИ-демо">
+  <div class="container">
+    <div class="demo-layout">
+      <div class="demo-chat reveal">
+        <div class="chat-header">
+          <div class="chat-avatar">ЦМ</div>
+          <div>
+            <div class="chat-name">Цифровой мастер</div>
+            <div class="chat-status"><span class="status-dot"></span>онлайн</div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg msg-bot">
+            <div class="msg-bubble">Привет! Я ИИ-ассистент цифрового мастера. Задайте любой вопрос об услугах, кейсах или процессе работы — отвечу мгновенно.</div>
+          </div>
+        </div>
+        <div class="chat-quick">
+          <button class="quick-btn" onclick="askQuestion('Сколько стоит сайт?')">Сколько стоит?</button>
+          <button class="quick-btn" onclick="askQuestion('Как быстро делаете?')">Сроки?</button>
+          <button class="quick-btn" onclick="askQuestion('Есть опыт с ИИ?')">Опыт с ИИ?</button>
+          <button class="quick-btn" onclick="askQuestion('Как начать работу?')">Как начать?</button>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="chat-input" type="text" placeholder="Задайте вопрос..." aria-label="Вопрос ассистенту" onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="chat-send" onclick="sendChat()" aria-label="Отправить">→</button>
+        </div>
+      </div>
+      <div class="demo-info reveal reveal-delay-2">
+        <span class="eyebrow">ИИ-демо</span>
+        <h2 class="section-title">Спроси меня напрямую</h2>
+        <p class="section-sub">Этот ИИ-агент — не просто чатбот. Он знает о моих услугах, кейсах и подходе. Это живой пример того, что я создаю для клиентов.</p>
+        <div class="demo-features">
+          <div class="demo-feat">
+            <div class="feat-icon">
+              <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <p class="feat-text"><strong>Отвечает мгновенно</strong> — без ожидания, без «напишу завтра»</p>
+          </div>
+          <div class="demo-feat">
+            <div class="feat-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            </div>
+            <p class="feat-text"><strong>Знает детали</strong> — цены, сроки, технологии, кейсы</p>
+          </div>
+          <div class="demo-feat">
+            <div class="feat-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.61 5 2 2 0 0 1 3.6 2.87h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.5a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 18"/></svg>
+            </div>
+            <p class="feat-text"><strong>Такого же агента</strong> я могу создать для вашего бизнеса</p>
+          </div>
+        </div>
+        <a href="#contact" class="btn btn-primary">
+          Хочу такого же агента
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CONTACT
+     ============================================================ -->
+<section id="contact" aria-label="Контакты">
+  <div class="container">
+    <div class="contact-layout">
+      <div class="contact-info reveal">
+        <span class="eyebrow">Контакт</span>
+        <h2 class="section-title">Есть проект?<br>Давайте обсудим</h2>
+        <p class="section-sub">Расскажите о задаче — отвечу в течение нескольких часов с конкретными вопросами и предварительной оценкой.</p>
+        <div class="contact-channels">
+          <a href="https://t.me/username" class="channel" target="_blank" rel="noopener">
+            <div class="channel-icon">
+              <svg viewBox="0 0 24 24"><path d="M21.198 2.433a2.242 2.242 0 0 0-1.022.215L3.5 9.266c-.98.41-.967 1.763.02 2.154l3.893 1.464 1.531 4.84c.184.579.807.872 1.394.641l2.185-.851 2.854 2.156c.5.378 1.22.227 1.535-.325l5.5-13.75a1.498 1.498 0 0 0-.214-1.162z"/></svg>
+            </div>
+            <div>
+              <div class="channel-label">Telegram</div>
+              <div class="channel-value">@username</div>
+            </div>
+          </a>
+          <a href="mailto:hello@example.com" class="channel">
+            <div class="channel-icon">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <div class="channel-label">Email</div>
+              <div class="channel-value">hello@example.com</div>
+            </div>
+          </a>
+          <a href="https://github.com/username" class="channel" target="_blank" rel="noopener">
+            <div class="channel-icon">
+              <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            </div>
+            <div>
+              <div class="channel-label">GitHub</div>
+              <div class="channel-value">github.com/username</div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="contact-form reveal reveal-delay-2">
+        <div id="form-content">
+          <div class="form-title">Расскажите о проекте</div>
+          <div class="field-group">
+            <label class="field-label" for="f-name">Ваше имя</label>
+            <input class="field-input" id="f-name" type="text" placeholder="Как вас зовут?" autocomplete="name">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="f-contact">Email или Telegram</label>
+            <input class="field-input" id="f-contact" type="text" placeholder="email@company.com или @username">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="f-task">Задача</label>
+            <textarea class="field-input" id="f-task" placeholder="Опишите в 2–3 предложениях что нужно сделать"></textarea>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="submitForm()">
+            Отправить заявку
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <p class="form-note">Отвечаю в рабочее время в течение 2 часов</p>
+        </div>
+        <div class="form-success" id="form-success" role="alert" aria-live="polite">
+          <!-- Confetti particles -->
+          <div class="confetti-wrap" aria-hidden="true">
+            <span style="left:15%;background:#7C6AF7;--delay:0.1s;--dur:1.1s;--spin:200deg"></span>
+            <span style="left:28%;background:#34D399;--delay:0.2s;--dur:1.3s;--spin:320deg;width:5px;height:10px"></span>
+            <span style="left:42%;background:#A594FF;--delay:0.05s;--dur:1.0s;--spin:280deg"></span>
+            <span style="left:55%;background:#F87171;--delay:0.25s;--dur:1.4s;--spin:150deg;border-radius:50%"></span>
+            <span style="left:68%;background:#7C6AF7;--delay:0.15s;--dur:1.2s;--spin:400deg;width:5px;height:10px"></span>
+            <span style="left:80%;background:#34D399;--delay:0.3s;--dur:1.1s;--spin:260deg"></span>
+            <span style="left:22%;background:#F87171;--delay:0.35s;--dur:1.35s;--spin:180deg;border-radius:50%"></span>
+            <span style="left:72%;background:#A594FF;--delay:0.08s;--dur:1.25s;--spin:340deg"></span>
+          </div>
+          <!-- Animated check circle -->
+          <div class="success-ring">
+            <div class="success-circle">
+              <svg class="check-svg" viewBox="0 0 32 32" aria-hidden="true">
+                <polyline class="check-path" points="7,17 13,23 25,10"/>
+              </svg>
+            </div>
+          </div>
+          <h3 class="success-title">Заявка получена!</h3>
+          <p class="success-body">Отвечу в течение нескольких часов.<br>А пока — посмотрите мои кейсы.</p>
+          <a href="#work" class="btn btn-ghost success-cta">
+            Посмотреть работы
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer aria-label="Подвал сайта">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">Цифровой мастер<span>.</span></div>
+      <div class="footer-copy">© 2026 — Сделано с умом и ИИ</div>
+      <div class="footer-links">
+        <a href="#services">Услуги</a>
+        <a href="#work">Работы</a>
+        <a href="#contact">Контакт</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+/* ============================================================
+   SCROLL HANDLERS (RAF-throttled)
+   ============================================================ */
+const progressBar = document.getElementById('progress-bar');
+const nav         = document.getElementById('nav');
+const backToTop   = document.getElementById('back-to-top');
+const heroBg      = document.getElementById('hero-bg');
+
+function updateScroll() {
+  const scrollY = window.scrollY;
+  const docH    = document.documentElement.scrollHeight - window.innerHeight;
+
+  /* Progress bar */
+  progressBar.style.width = (docH > 0 ? (scrollY / docH) * 100 : 0) + '%';
+
+  /* Nav shrink */
+  nav.classList.toggle('scrolled', scrollY > 80);
+
+  /* Back to top — show after 400px */
+  backToTop.classList.toggle('visible', scrollY > 400);
+
+  /* Parallax blobs */
+  if (heroBg) heroBg.style.transform = 'translateY(' + (scrollY * 0.28) + 'px)';
+}
+
+let rafPending = false;
+window.addEventListener('scroll', () => {
+  if (!rafPending) {
+    rafPending = true;
+    requestAnimationFrame(() => { updateScroll(); rafPending = false; });
+  }
+}, { passive: true });
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ============================================================
+   CUSTOM CURSOR (desktop only)
+   ============================================================ */
+const cursor = document.getElementById('cursor');
+if (window.matchMedia('(pointer: fine)').matches) {
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .service-card, .case-card, .testi-card, .quick-btn, .channel').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+/* ============================================================
+   COUNT-UP (eased, triggered by IntersectionObserver)
+   ============================================================ */
+function easeOutQuart(t) {
+  return 1 - Math.pow(1 - t, 4);
+}
+
+const countObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el     = e.target;
+    const target = parseInt(el.dataset.target, 10);
+    const dur    = 1800; /* ms */
+    const start  = performance.now();
+
+    function tick(now) {
+      const elapsed  = Math.min(now - start, dur);
+      const progress = easeOutQuart(elapsed / dur);
+      el.textContent = Math.round(progress * target);
+      if (elapsed < dur) requestAnimationFrame(tick);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(tick);
+    countObs.unobserve(el);
+  });
+}, { threshold: 0.6 });
+
+document.querySelectorAll('.count-up').forEach(el => countObs.observe(el));
+
+/* ============================================================
+   SMOOTH SCROLL (nav + any #anchor links)
+   ============================================================ */
+function scrollToSection(id) {
+  const target = document.querySelector(id);
+  if (!target) return;
+  const offset = 80;
+  const top = target.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href === '#') return;
+    const target = document.querySelector(href);
+    if (!target) return;
+    e.preventDefault();
+    scrollToSection(href);
+    closeMobileMenu();
+  });
+});
+
+/* ============================================================
+   MOBILE MENU
+   ============================================================ */
+const burger     = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobile-menu');
+let   menuOpen   = false;
+
+function openMobileMenu() {
+  menuOpen = true;
+  burger.classList.add('open');
+  mobileMenu.style.display = 'flex';
+  /* Trigger transition on next frame */
+  requestAnimationFrame(() => mobileMenu.classList.add('open'));
+  burger.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobileMenu() {
+  if (!menuOpen) return;
+  menuOpen = false;
+  burger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+  burger.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+  /* Hide after transition */
+  setTimeout(() => {
+    if (!menuOpen) mobileMenu.style.display = '';
+  }, 320);
+}
+
+burger.addEventListener('click', () => {
+  menuOpen ? closeMobileMenu() : openMobileMenu();
+});
+
+/* Close on Escape key */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && menuOpen) closeMobileMenu();
+});
+
+/* Close on backdrop tap (touch devices) */
+mobileMenu.addEventListener('click', e => {
+  if (e.target === mobileMenu) closeMobileMenu();
+});
+
+/* ============================================================
+   FORM SUBMIT + VALIDATION
+   ============================================================ */
+function validateField(el) {
+  const empty = !el.value.trim();
+  el.classList.toggle('error', empty);
+  el.classList.toggle('valid', !empty);
+  return !empty;
+}
+
+['f-name', 'f-contact', 'f-task'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('blur', () => validateField(el));
+  el.addEventListener('input', () => {
+    if (el.classList.contains('error') && el.value.trim()) {
+      el.classList.remove('error');
+      el.classList.add('valid');
+    }
+  });
+});
+
+function submitForm() {
+  const name    = document.getElementById('f-name');
+  const contact = document.getElementById('f-contact');
+  const task    = document.getElementById('f-task');
+
+  const allValid = [name, contact, task].map(validateField).every(Boolean);
+  if (!allValid) {
+    /* Shake the first invalid field */
+    const first = [name, contact, task].find(f => !f.value.trim());
+    if (first) {
+      first.style.animation = 'none';
+      requestAnimationFrame(() => {
+        first.style.animation = 'shake 0.4s var(--ease-out)';
+      });
+      first.focus();
+    }
+    return;
+  }
+
+  /* Simulate sending — show success */
+  const btn = document.querySelector('[onclick="submitForm()"]');
+  if (btn) { btn.textContent = 'Отправляем…'; btn.disabled = true; }
+
+  setTimeout(() => {
+    document.getElementById('form-content').style.display = 'none';
+    document.getElementById('form-success').classList.add('show');
+  }, 600);
+}
+
+/* Shake keyframe (injected so it stays in JS context) */
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent = '@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }';
+document.head.appendChild(shakeStyle);
+
+/* ============================================================
+   AI CHAT DEMO
+   ============================================================ */
+const RESPONSES = {
+  'сколько стоит': 'Ориентировочно: лендинг — от 50 000 ₽, корпоративный сайт — от 90 000 ₽, веб-приложение — от 150 000 ₽, ИИ-агент — от 30 000 ₽. Точную стоимость назову после короткого созвона.',
+  'цена': 'Ориентировочно: лендинг — от 50 000 ₽, корпоративный сайт — от 90 000 ₽, веб-приложение — от 150 000 ₽, ИИ-агент — от 30 000 ₽. Точную стоимость назову после короткого созвона.',
+  'сроки': 'Лендинг — 1–2 недели, корпоративный сайт — 2–4 недели, веб-приложение — 4–8 недель, ИИ-агент — 1–3 недели. Всё зависит от объёма задачи.',
+  'быстро': 'Лендинг — 1–2 недели, корпоративный сайт — 2–4 недели, веб-приложение — 4–8 недель, ИИ-агент — 1–3 недели. Всё зависит от объёма задачи.',
+  'ии': 'Да, это одно из ключевых направлений. Создаю Telegram-ботов, чат-ассистентов, автоматизацию на n8n и кастомных агентов на базе Claude API и OpenAI. Этот чатбот — живой пример.',
+  'агент': 'ИИ-агент — это программа, которая выполняет задачи автоматически: отвечает на вопросы, принимает заявки, напоминает о записях. Я создаю их под конкретные бизнес-задачи.',
+  'опыт': 'Более 3 лет и 30+ проектов: сайты, веб-приложения и ИИ-агенты для малого бизнеса, клиник, образовательных платформ и экспертов.',
+  'начать': 'Просто напишите в Telegram @username или заполните форму ниже. Первый созвон бесплатный — 30–60 минут, разбираем вашу задачу без обязательств.',
+  'процесс': 'Созвон-бриф (день 1) → смета и план (1–2 дня) → разработка с еженедельными апдейтами → запуск с месяцем поддержки. Фиксированный бюджет с самого начала.',
+  'гарантия': 'Фиксированный бюджет — цена не меняется после согласования. Месяц поддержки после запуска включён. Еженедельные отчёты по ходу работы.',
+  'портфолио': 'На сайте выше есть 4 кейса: сеть кофеен, Telegram-бот для клиники, платформа StudyPro и лендинг для онлайн-курса. Могу рассказать подробнее о любом.',
+  'telegram': 'Пишите @username — отвечу в течение 2 часов в рабочее время.',
+};
+
+function getResponse(q) {
+  const ql = q.toLowerCase();
+  for (const [key, resp] of Object.entries(RESPONSES)) {
+    if (ql.includes(key)) return resp;
+  }
+  return 'Хороший вопрос! Лучше обсудить это напрямую — напишите в Telegram @username или заполните форму на этой странице, и я отвечу в течение 2 часов.';
+}
+
+function addMessage(text, isUser) {
+  const msgs  = document.getElementById('chat-messages');
+  const div   = document.createElement('div');
+  div.className = 'msg ' + (isUser ? 'msg-user' : 'msg-bot');
+  const bubble  = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.textContent = text;
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const div  = document.createElement('div');
+  div.className = 'msg msg-bot';
+  div.id = 'typing-indicator';
+  div.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
+
+function askQuestion(q) {
+  addMessage(q, true);
+  showTyping();
+  const delay = 700 + Math.random() * 600;
+  setTimeout(() => {
+    hideTyping();
+    addMessage(getResponse(q), false);
+  }, delay);
+}
+
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+  askQuestion(q);
+}
+
+/* Initial state check */
+updateScroll();
+</script>
+</body>
+</html>
